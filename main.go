@@ -10,8 +10,8 @@ import (
 	"strings"
 )
 
-var img_width int = 200
-var img_height int = 200
+var img_width int = 1920
+var img_height int = 1080
 
 var colour_black color.RGBA = color.RGBA{0, 0, 0, 0xff}
 var colour_white color.RGBA = color.RGBA{0xff, 0xff, 0xff, 0xff}
@@ -62,8 +62,6 @@ func encode_img(data []byte, filename string) *image.RGBA {
 	binary := binary_string(data)
 	file_size := len(binary)
 
-	fmt.Println(binary)
-
 	b1 := (file_size & 0xff0000) >> 16
 	b2 := (file_size & 0xff00) >> 8
 	b3 := (file_size & 0xff) >> 0
@@ -86,8 +84,6 @@ func encode_img(data []byte, filename string) *image.RGBA {
 			y++
 		}
 	}
-
-	// Add EOF pixel which tells the interpreter to stop reading. It could be half
 
 	return img
 }
@@ -129,10 +125,7 @@ func decode_img(path string) []byte {
 		}
 	}
 
-	fmt.Println(file_size)
-
 	bytes := decode_binary(data)
-	fmt.Println(data)
 
 	return bytes
 }
