@@ -62,6 +62,8 @@ func encode_img(data []byte, filename string) *image.RGBA {
 	binary := binary_string(data)
 	file_size := len(binary)
 
+	fmt.Println(binary)
+
 	b1 := (file_size & 0xff0000) >> 16
 	b2 := (file_size & 0xff00) >> 8
 	b3 := (file_size & 0xff) >> 0
@@ -85,21 +87,27 @@ func encode_img(data []byte, filename string) *image.RGBA {
 		}
 	}
 
+	// Add EOF pixel which tells the interpreter to stop reading. It could be half
+
 	return img
 }
 
-func decode_img(path string) string {
+func decode_img(path string) []byte {
 	file, err := os.Open(path)
 	if err != nil {
 		fmt.Println(err)
-		return err.Error()
+		os.Exit(1)
 	}
 
 	image, _ := png.Decode(file)
 
 	r, g, b, _ := image.At(0, 0).RGBA()
 
-	file_size := int((uint8(r) << 16) + (uint8(g) << 8) + uint8(b))
+	red := uint8(r)
+	green := uint8(g)
+	blue := uint8(b)
+
+	file_size := int(red)<<16 + int(green)<<8 + int(blue)
 
 	data := ""
 
@@ -121,9 +129,12 @@ func decode_img(path string) string {
 		}
 	}
 
-	bytes := decode_binary(data)
+	fmt.Println(file_size)
 
-	return string(bytes)
+	bytes := decode_binary(data)
+	fmt.Println(data)
+
+	return bytes
 }
 
 func main() {
@@ -145,6 +156,14 @@ func main() {
 		png.Encode(f, frame)
 	} else if arguments[1] == "decode" {
 		output := decode_img(path)
-		fmt.Println(output)
+
+		file, _ := os.Create(arguments[3])
+
+		_, err := file.Write(output)
+		if err != nil {
+			fmt.Println(err)
+		}
+
+		file.Close()
 	}
 }
