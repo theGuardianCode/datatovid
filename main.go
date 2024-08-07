@@ -44,7 +44,7 @@ func decode_binary(binary string) []byte {
 	data := make([]byte, len(binary)/8)
 
 	for i := 0; i < len(binary)-6; i += 8 {
-		num, _ := strconv.ParseInt(binary[i:i+8], 2, 8)
+		num, _ := strconv.ParseUint(binary[i:i+8], 2, 8)
 		data[i/8] = byte(num)
 	}
 
@@ -132,6 +132,7 @@ func decode_img(path string) []byte {
 
 func main() {
 	arguments := os.Args
+	// arguments := []string{"", "decode", "outfile.png", "bazinga.zip"}
 	path := arguments[2]
 
 	data, err := os.ReadFile(path)
