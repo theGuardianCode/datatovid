@@ -21,8 +21,8 @@ func handle_error(err error) {
 }
 
 func main() {
-	// arguments := os.Args
-	arguments := []string{"", "decode", "outfile.png", "document.docx"}
+	arguments := os.Args
+	//arguments := []string{"", "decode", "outfile.png", "document.docx"}
 	path := arguments[2]
 
 	data, err := os.ReadFile(path)
